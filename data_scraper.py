@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup as soup
 from statics.captcha_reader import decode
 import json
 
+EPFO_base_url = "https://unifiedportal-epfo.epfindia.gov.in"
 EPFO_URL = "https://unifiedportal-epfo.epfindia.gov.in/publicPortal/no-auth/misReport/home/loadEstSearchHome/"
 MCA_URL = "http://www.mca.gov.in/mcafoportal/showCheckCompanyName.do"
 
@@ -24,17 +25,21 @@ def post_search_establishment_request(my_soup, session, est_name, est_code=""):
     my_url = get_full_url(est_req)
     response = None
     i = 0
-    while response is None: 
-        captcha = generate_and_read_captcha(my_soup, session)
-       
-        if len(captcha) > 4:
-            print(captcha)
-            response = session.post(my_url, data=json.dumps({"EstName": est_name, "EstCode": est_code, "captcha": captcha}),
-                                    headers={'Content-Type': 'application/json'})
-            if 'Please enter valid captcha' in str(response.content):
-                i+=1
-                print("Try: - ", i)
-                response = None
+    while response is None:
+        try:
+            captcha = generate_and_read_captcha(my_soup, session)
+        
+            if len(captcha) > 4:
+                print(captcha)
+                response = session.post(my_url, data=json.dumps({"EstName": est_name, "EstCode": est_code, "captcha": captcha}),
+                                        headers={'Content-Type': 'application/json'})
+                if 'Please enter valid captcha' in str(response.content):
+                    i+=1
+                    print("Try: - ", i)
+                    response = None
+        except Exception as e:
+            response = None
+            print("Exception:" + str(e))
     return response
 
 def generate_and_read_captcha(my_soup, session):
@@ -49,8 +54,7 @@ def generate_and_read_captcha(my_soup, session):
     return decode(filename)
 
 def get_full_url(sub_url):
-    base_url = "https://unifiedportal-epfo.epfindia.gov.in"
-    return base_url+sub_url
+    return EPFO_base_url + sub_url
 
 def get_company_list(establishment_response):
     my_soup = soup(establishment_response.text, "html.parser")
@@ -59,10 +63,6 @@ def get_company_list(establishment_response):
                 "EstablishmentName": None,
                 "EstablishmentAddress": None }
 
-    # for org in my_soup.find_all("a", href=True):
-    #     print(org)
-    #     name_list.append(org["name"])
-    # return name_list
     idx = 0
     for org in my_soup.find_all("td"):
         if idx == 5 or idx == 0:
@@ -87,6 +87,7 @@ def get_company_list(establishment_response):
 
 def get_comp_list_mca(name):
     payload = {'name1':name,'checkCompanyName_0':'Search','displayCaptcha':False}
+    return [{"Error" : "Not Implimented"}]
     #counter=1&name1=flipkart&name2=&name3=&name4=&name5=&name6=&activityType1=&activityType2=&displayCaptcha=false
     with requests.session() as s:
         s.headers={"User-Agent":"Mozilla/5.0"}
@@ -95,5 +96,6 @@ def get_comp_list_mca(name):
         my_soup = soup(res.text, "html.parser")
         _soup=soup(res.text,"lxml")
         print(_soup.prettify())
+        return [True]
 
-get_comp_list_mca("Flipkart")
+# get_comp_list_mca("Flipkart")
