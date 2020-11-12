@@ -83,7 +83,10 @@ def index_to_img(index_list):
 
 def chars_to_string(chars):
     char_l = []
-    pts.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+    try:
+        pts.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+    except Exception as e:
+        print("path err")
     for char in chars:
         img = Image.fromarray(char)
         img = img.convert('RGB')

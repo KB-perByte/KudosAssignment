@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup as soup
-from statics.captcha_reader import decode
+from scrappyepfo.statics.captcha_reader import decode
 import json
 
 EPFO_base_url = "https://unifiedportal-epfo.epfindia.gov.in"

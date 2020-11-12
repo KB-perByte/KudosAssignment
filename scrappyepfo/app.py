@@ -1,4 +1,4 @@
-from data_scraper import get_comp_list, get_comp_list_mca
+from scrappyepfo.data_scraper import get_comp_list, get_comp_list_mca
 from fuzzywuzzy import process
 import  pprint
 from fastapi import FastAPI
