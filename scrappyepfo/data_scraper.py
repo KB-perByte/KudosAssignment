@@ -46,7 +46,7 @@ def generate_and_read_captcha(my_soup, session):
     img_src = my_soup.find("div", {"id": "captchaImg"}).find("img")['src']
     my_url = get_full_url(img_src)
     response = session.get(my_url, stream=True)
-    filename = "statics/web_captcha.png"
+    filename = "scrappyepfo/statics/web_captcha.png"
     with open(filename,
               "wb") as f: 
         f.write(response.content)
