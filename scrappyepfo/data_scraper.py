@@ -38,8 +38,8 @@ def post_search_establishment_request(my_soup, session, est_name, est_code=""):
                     print("Try: - ", i)
                     response = None
         except Exception as e:
-            response = None
             print("Exception:" + str(e))
+            return []
     return response
 
 def generate_and_read_captcha(my_soup, session):
