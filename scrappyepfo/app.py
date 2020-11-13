@@ -1,4 +1,7 @@
-from scrappyepfo.data_scraper import get_comp_list, get_comp_list_mca
+try:
+    from scrappyepfo.data_scraper import get_comp_list, get_comp_list_mca
+except:
+    from data_scraper import get_comp_list, get_comp_list_mca
 from fuzzywuzzy import process
 import  pprint
 from fastapi import FastAPI
@@ -37,8 +40,8 @@ def perform_epfo(name):
 
 def perform_mca(name):
     comp_list = get_comp_list_mca(name)
-    pprint.pprint(comp_list[0])
-    return comp_list[0]
+    pprint.pprint(comp_list)
+    return comp_list
 
     
 
